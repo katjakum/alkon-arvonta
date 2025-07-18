@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arvonta</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        background-color: #f9fafb;
+      }
+
+      .wrapper {
+        padding: 5vh 4vw;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 420px;
+        background: white;
+        padding: 1.5rem 1.5rem 2rem;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+        border-radius: 12px;
+        overflow-y: auto;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .slide {
+        display: none;
+        animation: fadeIn 0.6s ease-in-out;
+      }
+
+      .visible {
+        display: block;
+      }
+
+      .nimi,
+      .tuote {
+        font-size: 1.8rem;
+        margin: 1.5rem 0;
+        color: rgb(80, 111, 98);
+        font-weight: 600;
+      }
+
+      .tuote p {
+        margin: 0.3rem 0;
+        color: #333;
+        font-size: 1rem;
+      }
+
+      a {
+        color: rgb(91, 114, 96);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .button {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+        margin-top: 2rem;
+        background-color:rgb(91, 114, 96);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: rgb(69, 87, 73);
+      }
+
+      img {
+        max-width: 100%;
+        max-height: 40vh;
+        height: auto;
+        margin-top: 1.2rem;
+        border-radius: 12px;
+        object-fit: contain;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 360px) {
+        .nimi,
+        .tuote {
+          font-size: 1.4rem;
+        }
+        .button {
+          padding: 12px 24px;
+          font-size: 1rem;
+          margin-top: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper" data-nimi="{{ nimi }}">
+      <div class="container">
+        <div id="vaihe1" class="slide visible">
+          <div class="nimi">Onnittelut {{ nimi }}!</div>
+          <img
+            id="henkiloKuva"
+            src=""
+            alt="kuva"
+            loading="lazy"
+          />
+          <button class="button" onclick="seuraava()">Näytä tuote</button>
+        </div>
+
+        <!-- Vaihe 2: Tuote -->
+        <div id="vaihe2" class="slide">
+          <div class="tuote">
+            <p><strong>{{ tuote_nimi }}</strong></p>
+            <p>Tyyppi: {{ tyyppi }}</p>
+            <p>Hinta: {{ hinta }} €</p>
+            <p>Alkoholi: {{ alkoholi }}%</p>
+            <p>Koko: {{ "%.2f"|format(pullokoko) }} l</p>
+            <p>
+              <a href="{{ linkki }}" target="_blank" rel="noopener noreferrer">
+                Katso tuote Alkon sivuilla →
+              </a>
+            </p>
+            <img
+              src="{{ url_for('static', filename='kissakuvat/' + random_image) }}"
+              alt="random kuva"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const nimi = document.querySelector('.wrapper').dataset.nimi.toLowerCase();
+      const kuva = document.getElementById('henkiloKuva');
+
+      if (nimi === 'henri') {
+        kuva.src = "{{ url_for('static', filename='jarikuvat/hetu.png') }}";
+      } else if (nimi === 'ose') {
+        kuva.src = "{{ url_for('static', filename='jarikuvat/ose.png') }}";
+      } else if (nimi === 'roope') {
+        kuva.src = "{{ url_for('static', filename='jarikuvat/roope.png') }}";
+      }
+
+      function seuraava() {
+        document.getElementById("vaihe1").classList.remove("visible");
+        document.getElementById("vaihe2").classList.add("visible");
+      }
+    </script>
+  </body>
+</html>
